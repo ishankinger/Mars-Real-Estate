@@ -60,7 +60,7 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout:$version_constraint_layout"
 
     // ViewModel and LiveData
-    // implementation "androidx.lifecycle:lifecycle-extensions:$version_lifecycle_extensions"
+    implementation "androidx.lifecycle:lifecycle-extensions:2.0.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$version_lifecycle"
 
     // Navigation

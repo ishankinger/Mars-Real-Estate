@@ -44,6 +44,10 @@ class OverviewViewModel : ViewModel() {
     val properties: LiveData<List<MarsProperty>>
         get() = _properties
 
+    private val _navigateToSelectedProperty = MutableLiveData<MarsProperty>()
+    val navigateToSelectedProperty: LiveData<MarsProperty>
+        get() = _navigateToSelectedProperty
+
     // Coroutines ViewModelJob and Coroutine scope are defined (used to do long running operations)
     private var viewModelJob = Job()
     private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main )
@@ -78,6 +82,13 @@ class OverviewViewModel : ViewModel() {
     }
     // And then the assigned value to the live data is displayed on the layout using
 
+
+    fun displayPropertyDetails(marsProperty: MarsProperty) {
+        _navigateToSelectedProperty.value = marsProperty
+    }
+    fun displayPropertyDetailsComplete() {
+        _navigateToSelectedProperty.value = null
+    }
     // On cleared function to cancel all the coroutines
     override fun onCleared() {
         super.onCleared()
