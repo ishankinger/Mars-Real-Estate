@@ -23,10 +23,18 @@ import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 
-@BindingAdapter("imageUrl")
+// Now in this binding Adapter we will be using the Glide Library to show our image in the app
+// Glide library is used to display image
+@BindingAdapter("imageUrl") // This annotation tell data binding that we want this Binding adpater
+// to be executed when used in xml code
 fun bindImage(imgView: ImageView, imgUrl: String?) {
+    // handle null exception of image url
     imgUrl?.let {
+        // Glide needs two things to generate image
+        // >> image URL
+        // >> image view
         val imgUri = imgUrl.toUri().buildUpon().scheme("https").build()
+        // now glide can generate image
         Glide.with(imgView.context)
             .load(imgUri)
             .apply(

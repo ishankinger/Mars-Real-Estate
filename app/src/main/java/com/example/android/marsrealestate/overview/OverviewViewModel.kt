@@ -32,45 +32,51 @@ import kotlinx.coroutines.launch
  */
 class OverviewViewModel : ViewModel() {
 
-    // The internal MutableLiveData String that stores the status of the most recent request
+    // live data used to show the data on the screen (for string)
+    // This is of type string
     private val _status = MutableLiveData<String>()
-    // The external immutable LiveData for the request status String
     val status: LiveData<String>
         get() = _status
 
+    // another live data used to show the data on the screen (for images)
+    // This is of type MarsProperty which have four different objects in it including image
     private val _property = MutableLiveData<MarsProperty>()
     val property: LiveData<MarsProperty>
         get() = _property
 
-    /**
-     * Call getMarsRealEstateProperties() on init so we can display status immediately.
-     */
-
-
+    // Coroutines ViewModelJob and Coroutine scope are defined (used to do long running operations)
     private var viewModelJob = Job()
     private var coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main )
 
+    // Call getMarsRealEstateProperties on init block so we can display status immediately
     init {
         getMarsRealEstateProperties()
     }
 
-    /**
-     * Sets the value of the status LiveData to the Mars API status.
-     */
+    // Calls Retrofit Service's methods using MarsApi public object
+    // According to failure or success to connect with internet live data value is assigned
     private fun getMarsRealEstateProperties() {
+        // using coroutine scope to update our live data
         coroutineScope.launch {
+            // list is stored in this getPropertiesDeferred variable
             var getPropertiesDeferred = MarsApi.retrofitService.getProperties()
+            // success case (we fetch data correctly)
             try {
+                // now we can store list in listResult variable
                 var listResult = getPropertiesDeferred.await()
+                // now we can assign the value to the live data
                 if (listResult.size > 0) {
                     _property.value = listResult[2]
                 }
+            // failure case (we can't fetch data correctly)
             } catch (e: Exception) {
                 _status.value = "Failure: ${e.message}"
             }
         }
     }
+    // And then the assigned value to the live data is displayed on the layout using
 
+    // On cleared function to cancel all the coroutines
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()

@@ -19,8 +19,12 @@ package com.example.android.marsrealestate.network
 
 import com.squareup.moshi.Json
 
+// Now using Moshi we want to convert the JSON to Kotlin objects
+// So we make a data class with it's objects having same name as used in the web Server
 data class MarsProperty(
     val id: String,
+    // Here we don't want to use img_src as our object name but it is used in the web server so
+    // we can use this annotation to tell android that for this "___" name we are using different name
     @Json(name = "img_src")
     val imgSrcUrl: String,
     val type: String,
