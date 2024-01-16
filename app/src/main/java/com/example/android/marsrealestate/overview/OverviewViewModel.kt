@@ -40,9 +40,9 @@ class OverviewViewModel : ViewModel() {
 
     // another live data used to show the data on the screen (for images)
     // This is of type MarsProperty which have four different objects in it including image
-    private val _property = MutableLiveData<MarsProperty>()
-    val property: LiveData<MarsProperty>
-        get() = _property
+    private val _properties = MutableLiveData<List<MarsProperty>>()
+    val properties: LiveData<List<MarsProperty>>
+        get() = _properties
 
     // Coroutines ViewModelJob and Coroutine scope are defined (used to do long running operations)
     private var viewModelJob = Job()
@@ -66,7 +66,7 @@ class OverviewViewModel : ViewModel() {
                 var listResult = getPropertiesDeferred.await()
                 // now we can assign the value to the live data
                 if (listResult.size > 0) {
-                    _property.value = listResult[2]
+                    _properties.value = listResult
                 }
             // failure case (we can't fetch data correctly)
             } catch (e: Exception) {
