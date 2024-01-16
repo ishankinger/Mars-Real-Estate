@@ -25,6 +25,7 @@ import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 // a variable for root web address of the Mars Server endpoint
 private const val BASE_URL = "https://mars.udacity.com/"
@@ -45,6 +46,8 @@ private val retrofit = Retrofit.Builder()
     .baseUrl(BASE_URL)
     .build()
 
+enum class MarsApiFilter(val value: String) { SHOW_RENT("rent"), SHOW_BUY("buy"), SHOW_ALL("all") }
+
 // Explains how retrofit talks to our web server using http requests
 interface MarsApiService {
     // When we call the get Properties method, Retrofit appends "___" to the base url
@@ -52,7 +55,7 @@ interface MarsApiService {
     // Method which get data from the web server
     // Getting data as a deferred list ( Deferred is a coroutine Job that can directly return a result
     // and it contains await method which causes code to await without blocking coroutine
-    fun getProperties():
+    fun getProperties(@Query("filter") type: String):
             Deferred<List<MarsProperty>>
 }
 

@@ -21,6 +21,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.android.marsrealestate.network.MarsApi
+import com.example.android.marsrealestate.network.MarsApiFilter
 import com.example.android.marsrealestate.network.MarsProperty
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -54,16 +55,16 @@ class OverviewViewModel : ViewModel() {
 
     // Call getMarsRealEstateProperties on init block so we can display status immediately
     init {
-        getMarsRealEstateProperties()
+        getMarsRealEstateProperties(MarsApiFilter.SHOW_ALL)
     }
 
     // Calls Retrofit Service's methods using MarsApi public object
     // According to failure or success to connect with internet live data value is assigned
-    private fun getMarsRealEstateProperties() {
+    private fun getMarsRealEstateProperties(filter: MarsApiFilter) {
         // using coroutine scope to update our live data
         coroutineScope.launch {
             // list is stored in this getPropertiesDeferred variable
-            var getPropertiesDeferred = MarsApi.retrofitService.getProperties()
+            var getPropertiesDeferred = MarsApi.retrofitService.getProperties(filter.value)
             // success case (we fetch data correctly)
             try {
                 _status.value = MarsApiStatus.LOADING
@@ -82,7 +83,9 @@ class OverviewViewModel : ViewModel() {
     }
     // And then the assigned value to the live data is displayed on the layout using
 
-
+    fun updateFilter(filter: MarsApiFilter) {
+        getMarsRealEstateProperties(filter)
+    }
     fun displayPropertyDetails(marsProperty: MarsProperty) {
         _navigateToSelectedProperty.value = marsProperty
     }
