@@ -27,15 +27,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-/**
- * The [ViewModel] that is attached to the [OverviewFragment].
- */
+enum class MarsApiStatus { LOADING, ERROR, DONE }
+
+// The [ViewModel] that is attached to the [OverviewFragment].
 class OverviewViewModel : ViewModel() {
 
     // live data used to show the data on the screen (for string)
     // This is of type string
-    private val _status = MutableLiveData<String>()
-    val status: LiveData<String>
+    private val _status = MutableLiveData<MarsApiStatus>()
+    val status: LiveData<MarsApiStatus>
         get() = _status
 
     // another live data used to show the data on the screen (for images)
@@ -62,15 +62,17 @@ class OverviewViewModel : ViewModel() {
             var getPropertiesDeferred = MarsApi.retrofitService.getProperties()
             // success case (we fetch data correctly)
             try {
+                _status.value = MarsApiStatus.LOADING
                 // now we can store list in listResult variable
                 var listResult = getPropertiesDeferred.await()
                 // now we can assign the value to the live data
                 if (listResult.size > 0) {
                     _properties.value = listResult
                 }
+                _status.value = MarsApiStatus.DONE
             // failure case (we can't fetch data correctly)
             } catch (e: Exception) {
-                _status.value = "Failure: ${e.message}"
+                _status.value = MarsApiStatus.ERROR
             }
         }
     }
